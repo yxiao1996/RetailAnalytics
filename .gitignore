@@ -3,5 +3,6 @@
 *.weights
 *.json
 *.jpg
+*.npy
 __pycache__/
 *.pyc

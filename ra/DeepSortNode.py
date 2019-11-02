@@ -18,10 +18,11 @@ class DeepSortNode(Observer, Subject):
     TOP_LEFT = "topleft"
     BOTTOM_RIGHT = "bottomright"
 
-    def __init__(self, encoderPath):
-        self.metric = nn_matching.NearestNeighborDistanceMetric("cosine", 0.2, 100)
-        self.tracker = Tracker(self.metric)
+    def __init__(self, encoderPath, confidenceThreshold = 0.2):
+        self.metric = nn_matching.NearestNeighborDistanceMetric("cosine", 0.5, 500)
+        self.tracker = Tracker(self.metric, max_age = 100)
         self.encoder = generate_detections.create_box_encoder(encoderPath)
+        self.confidenceThreshold = confidenceThreshold
 
     def update(self, subject):       
 
@@ -29,7 +30,7 @@ class DeepSortNode(Observer, Subject):
         boundBoxes = []
         confidences = []
         for detectedObject in subject.detection:
-            if(detectedObject[self.LABEL] == self.PERSON):
+            if(detectedObject[self.LABEL] == self.PERSON and detectedObject[self.CONFIDENCE] > self.confidenceThreshold):
                 leftTopWidthHeight = self.convertTLBRToLTWH(detectedObject)
                 boundBoxes.append(np.array(leftTopWidthHeight).astype(np.float64))
                 confidences.append(detectedObject[self.CONFIDENCE])
