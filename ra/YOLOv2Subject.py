@@ -24,4 +24,4 @@ class YOLOv2Subject(Subject):
         self.notify(self.yoloNet.return_predict(image))
 
     def detectVideo(self):
-        self.yoloNet.camera(self)
+        self.yoloNet.camera()

@@ -5,16 +5,13 @@ class Subject(ABC):
     """
     The subject interface
     """
+    observers = []
 
-    @abstractmethod
     def attach(self, observer):
-        # attach a observer to the subject
-        pass
+        self.observers.append(observer)
 
-    @abstractmethod
     def detach(self, observer):
-        # detach an observer from the subject
-        pass
+        self.observers.remove(observer)
 
     @abstractmethod
     def notify(self):

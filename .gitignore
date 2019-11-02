@@ -1,3 +1,7 @@
 *.mkv
 *.egg-info
 *.weights
+*.json
+*.jpg
+__pycache__/
+*.pyc

@@ -2,14 +2,14 @@ from ra.Observer import Observer
 
 class NaivePeopleCountObserver(Observer):
     
-    def update(self, result):
+    LABEL = "label"
+    PERSON = "person"
+
+    def update(self, subject):
         # count the number of people in detection result
         peopleCount = 0
-        detectDict = result[0]
-        #if(not isinstance(result, dict)):
 
-
-        for label, confidence in detectDict.items():
-            if(label == "person"):
+        for detectedObject in subject.detection:
+            if(detectedObject[self.LABEL] == self.PERSON):
                 peopleCount += 1
         print("People Count: " + str(peopleCount))

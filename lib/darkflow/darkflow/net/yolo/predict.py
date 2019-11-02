@@ -108,9 +108,6 @@ def postprocess(self, net_out, im, save = True):
 			0, 1e-3 * h, self.meta['colors'][max_indx],
 			thick // 3)
 
-
-	if not save: return imgcv
-
 	outfolder = os.path.join(self.FLAGS.imgdir, 'out')
 	img_name = os.path.join(outfolder, os.path.basename(im))
 	if self.FLAGS.json:
@@ -119,5 +116,8 @@ def postprocess(self, net_out, im, save = True):
 		with open(textFile, 'w') as f:
 			f.write(textJSON)
 		return	
+		print("write json file at " + textFile)
+
+	if not save: return imgcv
 
 	cv2.imwrite(img_name, imgcv)

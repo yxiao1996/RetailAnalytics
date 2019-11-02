@@ -65,7 +65,7 @@ def _get_fps(self, frame):
     processed = self.framework.postprocess(net_out, frame, False)
     return timer() - start
 
-def camera(self, subject):
+def camera(self):
     file = self.FLAGS.demo
     SaveVideo = self.FLAGS.saveVideo
     
@@ -145,8 +145,6 @@ def camera(self, subject):
             choice = cv2.waitKey(1)
             if choice == 27: break
         
-        subject.notify(net_out)
-
     sys.stdout.write('\n')
     if SaveVideo:
         videoWriter.release()
