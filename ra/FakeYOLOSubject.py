@@ -11,6 +11,7 @@ class FakeYOLOSubject(Subject):
     observers = []
     image = []
     detection = []
+    END = False
 
     def __init__(self, jsonDirectory, imgDirectory):
         self.jsonDirectory = jsonDirectory
@@ -21,10 +22,18 @@ class FakeYOLOSubject(Subject):
         for observer in self.observers:
             observer.update(self)
 
-    def detectVideo(self):
+    def detectVideo(self, maxNumFrame = 0):
+        frameId = 0
         for jsonFile, imgFile in zip(os.listdir(self.jsonDirectory), os.listdir(self.imgDirectory)):
             if jsonFile.endswith(".json"):
                 with open(self.jsonDirectory + jsonFile, 'r') as fileHandle:
                     self.detection = json.loads(fileHandle.read())
                 self.image = cv2.imread(self.imgDirectory + imgFile) 
                 self.notify()
+                if(maxNumFrame > 0):
+                    if(frameId >= maxNumFrame):
+                        break
+                    else:
+                        frameId += 1
+        self.END = True
+        self.notify()

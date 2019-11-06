@@ -6,3 +6,8 @@
 *.npy
 __pycache__/
 *.pyc
+*.h5
+*.mp4
+*.gif
+*.png
+data/models/*

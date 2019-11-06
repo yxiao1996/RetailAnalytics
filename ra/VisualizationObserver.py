@@ -8,10 +8,18 @@ class VisualizationObserver(Observer):
 
     peoplePath = {} # keep track of each person
 
-    def __init__(self, vizType = "BoundingBox"):
+    def __init__(self, vizType = "BoundingBox", SaveVideo = False):
         self.vizType = vizType
+        self.SaveVideo = SaveVideo
+        if self.SaveVideo:
+            fourcc = cv2.VideoWriter_fourcc(*'XVID')
+            self.videoWriter = cv2.VideoWriter('output.mp4', fourcc, 10, (1280, 720))
 
     def update(self, subject):
+        if(subject.END and self.SaveVideo):
+            self.videoWriter.release()
+            return
+
         objectBoundingBoxes = subject.objectBoundingBoxes
         objectIds = subject.objectIds
         image = subject.image
@@ -33,6 +41,8 @@ class VisualizationObserver(Observer):
         # display
         cv2.imshow(self.vizType, image)
         cv2.waitKey(1)
+        if self.SaveVideo:
+            self.videoWriter.write(image)
 
     def _prunePeoplePath(self, objectIds):
         pruneKeys = []

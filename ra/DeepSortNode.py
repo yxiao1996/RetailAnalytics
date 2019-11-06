@@ -17,14 +17,19 @@ class DeepSortNode(Observer, Subject):
     CONFIDENCE = "confidence"
     TOP_LEFT = "topleft"
     BOTTOM_RIGHT = "bottomright"
+    END = False
 
-    def __init__(self, encoderPath, confidenceThreshold = 0.2):
-        self.metric = nn_matching.NearestNeighborDistanceMetric("cosine", 0.5, 500)
-        self.tracker = Tracker(self.metric, max_age = 100)
+    def __init__(self, encoderPath, confidenceThreshold = 0.6):
+        self.metric = nn_matching.NearestNeighborDistanceMetric("cosine", 0.9, 100)
+        self.tracker = Tracker(self.metric,max_iou_distance = 0.9, max_age = 50, n_init=3, _lambda = 0.3)
         self.encoder = generate_detections.create_box_encoder(encoderPath)
         self.confidenceThreshold = confidenceThreshold
 
     def update(self, subject):       
+        if(subject.END):
+            self.END = True
+            self.notify()
+            return
 
         # update tracker with detection from detector
         boundBoxes = []
@@ -39,7 +44,7 @@ class DeepSortNode(Observer, Subject):
                 Detection(bbox, confidence, feature) for bbox, confidence, feature in
                 zip(boundBoxes, confidences, features)]
         self.tracker.predict()
-        self.tracker.update(detections)
+        self.tracker.update(detections)       
 
         # extract bounding boxes and Ids 
         self.image = subject.image
