@@ -343,7 +343,7 @@ def create_image_encoder(model_filename, batch_size=32, loss_mode="cosine",
         model_filename, loss_mode)
 
 
-def create_box_encoder(model_filename, batch_size=32, loss_mode="cosine"):
+def create_box_encoder(model_filename, batch_size=32, loss_mode="cosine", applyMask = False):
     image_shape = 128, 64, 3
     image_encoder = create_image_encoder(model_filename, batch_size, loss_mode)
 
@@ -359,7 +359,26 @@ def create_box_encoder(model_filename, batch_size=32, loss_mode="cosine"):
         image_patches = np.asarray(image_patches)
         return image_encoder(image_patches)
 
-    return encoder
+    def encoderWithMask(image, boxes, masks):
+        image_patches = []
+        for i, box in enumerate(boxes):
+            maskedImage = image.copy()
+            # apply mask to image
+            for c in range(3):
+                maskedImage[:, :, c] = np.where(masks[:, :, i] == 0, 0, maskedImage[:, :, c])
+            patch = extract_image_patch(maskedImage, box, image_shape[:2])
+            if patch is None:
+                print("WARNING: Failed to extract image patch: %s." % str(box))
+                patch = np.random.uniform(
+                    0., 255., image_shape).astype(np.uint8)
+            image_patches.append(patch)
+        image_patches = np.asarray(image_patches)
+        return image_encoder(image_patches)
+
+    if(not applyMask):
+        return encoder
+    else:
+        return encoderWithMask
 
 
 def generate_detections(encoder, mot_dir, output_dir, detection_dir=None):
