@@ -6,7 +6,7 @@ from ra.Subject import Subject
 class FakeMaskRCNNSubject(Subject):
 
     observers = []
-    imgae = []
+    image = []
     rois = []
     masks = []
     scores = []
