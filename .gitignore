@@ -4,7 +4,7 @@
 *.json
 *.jpg
 *.npy
-__pycache__/
+ra/__pycache__/*
 *.pyc
 *.h5
 *.mp4

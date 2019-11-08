@@ -39,8 +39,8 @@ class VisualizationObserver(Observer):
             image = self._drawPathOnImage(image)
 
         # display
-        cv2.imshow(self.vizType, image)
-        cv2.waitKey(1)
+        #cv2.imshow(self.vizType, image)
+        #cv2.waitKey(1)
         if self.SaveVideo:
             self.videoWriter.write(image)
 
