@@ -32,11 +32,11 @@ class FakeYOLOSubject(Subject):
             observer.update(self)
 
     def detectVideo(self, maxNumFrame = 0):
-        frameId = 0
-        self.scores = []
-        self.rois = []
+        frameId = 0        
         for jsonFile, imgFile in zip(os.listdir(self.jsonDirectory), os.listdir(self.imgDirectory)):
             if jsonFile.endswith(".json"):
+                self.scores = []
+                self.rois = []
                 with open(self.jsonDirectory + jsonFile, 'r') as fileHandle:
                     detection = json.loads(fileHandle.read())
                 for detectedObject in detection:
