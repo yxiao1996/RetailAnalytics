@@ -122,6 +122,8 @@ def display_instances(image, boxes, masks, class_ids, class_names,
 
     masked_image = image.astype(np.uint32).copy()
     for i in range(N):
+        if(class_ids[i] != 1):
+            continue # skip all instances where are not person
         color = colors[i]
 
         # Bounding box
