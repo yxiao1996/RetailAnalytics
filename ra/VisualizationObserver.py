@@ -39,8 +39,9 @@ class VisualizationObserver(Observer):
             image = self._drawPathOnImage(image)
 
         # display
-        #cv2.imshow(self.vizType, image)
-        #cv2.waitKey(1)
+        cv2.imshow(self.vizType, image)
+        cv2.waitKey(0)
+        
         if self.SaveVideo:
             self.videoWriter.write(image)
 
@@ -54,17 +55,17 @@ class VisualizationObserver(Observer):
     
     def _addNewPointsToPeoplePath(self, objectBoundingBoxes, objectIds):
         for (bbox, personId) in zip(objectBoundingBoxes, objectIds):
-            footPoint = (int(abs(bbox[2]-bbox[0])/2+bbox[0]), int(bbox[3]))
+            centerPoint = (int(abs(bbox[2]-bbox[0])/2+bbox[0]), int(abs(bbox[3]-bbox[1])/2+bbox[1]))
             if(personId not in self.peoplePath.keys()):
-                self.peoplePath[personId] = [footPoint]
+                self.peoplePath[personId] = [centerPoint]
             else:
-                self.peoplePath[personId].append(footPoint)    
+                self.peoplePath[personId].append(centerPoint)    
     
     def _drawPathOnImage(self, image):
         h, w, _ = image.shape
         thick = int((h + w) // 300)
-        for personId, footPoints in self.peoplePath.items():
-            for i in range(0, len(footPoints)-2):
-                cv2.line(image, footPoints[i], footPoints[i+1], (0, 255, 0), thick//2)
-            cv2.putText(image, personId, footPoints[-1], 0, 1e-3 * h, (0,0,255),thick//6)
+        for personId, centerPoints in self.peoplePath.items():
+            for i in range(0, len(centerPoints)-2):
+                cv2.line(image, centerPoints[i], centerPoints[i+1], (0, 255, 0), thick//2)
+            cv2.putText(image, personId, centerPoints[-1], 0, 1e-3 * h, (0,0,255),thick//3)
         return image

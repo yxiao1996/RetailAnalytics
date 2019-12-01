@@ -1,4 +1,5 @@
 *.mkv
+*.avi
 *.egg-info
 *.weights
 *.json

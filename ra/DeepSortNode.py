@@ -14,7 +14,7 @@ class DeepSortNode(Observer, Subject):
 
     END = False
 
-    def __init__(self, encoderPath, applyMask = True):
+    def __init__(self, encoderPath, applyMask = False):
         self.metric = nn_matching.NearestNeighborDistanceMetric("cosine", 0.9, 100)
         self.tracker = Tracker(self.metric,max_iou_distance = 0.9, max_age = 50, n_init=3, _lambda = 0.3)
         self.encoder = generate_detections.create_box_encoder(encoderPath, applyMask = applyMask)

@@ -20,10 +20,10 @@ class StoreTrackObserver(Observer):
         objectIds = subject.objectIds
 
         for (bbox, personId) in zip(objectBoundingBoxes, objectIds):
-            footPoint = (int(abs(bbox[2]-bbox[0])/2+bbox[0]), int(bbox[3]))
+            centerPoint = (int(abs(bbox[2]-bbox[0])/2+bbox[0]), int(abs(bbox[3]-bbox[1])/2+bbox[1]))
             if(personId not in self.tracks.keys()):
-                self.tracks[personId] = [(footPoint, self.curTime)]
+                self.tracks[personId] = [(centerPoint, self.curTime)]
             else:
-                self.tracks[personId].append((footPoint, self.curTime))
+                self.tracks[personId].append((centerPoint, self.curTime))
 
         self.curTime += 1

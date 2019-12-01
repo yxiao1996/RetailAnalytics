@@ -1,0 +1,37 @@
+function mergedTracks = NaiveTrackMerging(tracks)
+    mergeables = detectMergeableTracks(tracks)
+    
+end
+
+function mergeables = detectMergeableTracks(tracks, Pthresh, sigma2)
+    trackModels = convertTrackModel(tracks);
+    P = zeros(numel(trackModels));
+    for i = 1 : numel(trackModels)
+        for j = 1 : numel(trackModels)
+            if(i == j)
+                P(i, j) = inf;
+            end
+            ti = trackModels{i};
+            tj = trackModels{j};
+            xei = ti.xe;
+            xsj = tj.xs;
+            tei = ti.te;
+            tsj = tj.ts;
+            P(i, j) = exp(-(xsj - xei)^2/(2*sigma2)) / (sqrt())
+        end
+    end
+end
+
+function newTracks = convertTrackModel(tracks)
+    newTracks = cell(numel(tracks), 1);
+    for i = 1 : numel(newTracks)
+        t = tracks{i};
+        ds = t{1};
+        de = t{end};
+        track.xs = ds{1};
+        track.ts = ds{2};
+        track.xe = de{1};
+        track.te = de{2};
+        newTracks{i} = track;
+    end
+end

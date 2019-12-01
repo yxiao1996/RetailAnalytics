@@ -1,15 +1,21 @@
 from ra.DeepSortNode import DeepSortNode
 from ra.StoreTrackObserver import StoreTrackObserver
 from ra.FakeYOLOSubject import FakeYOLOSubject
+from ra.FakeMaskRCNNSubject import FakeMaskRCNNSubject
+from ra.MaskRCNNSubject import MaskRCNNSubject
 
-JSON_DIR = "D:\\code_collection\\RetailAnalytics\\data\\bb\\cam4-2\\"
-IMG_DIR = "D:\\code_collection\\RetailAnalytics\\data\\imgs\\cam4-2\\"
-ENCODER_DIR = "D:\\code_collection\\RetailAnalytics\\lib\\deep_sort\\deep_sort\\resources\\networks\\mars-small128.ckpt-68577"
+MRCNN_ROOT = "./lib/mrcnn/"
+JSON_DIR = "./data/bb/cam4-2/"
+IMG_DIR = "./data/imgs/cam4-2/"
+ENCODER_DIR = "./lib/deep_sort/deep_sort/resources/networks/mars-small128.ckpt-68577"
+APPLY_MASK = False
+confidenceThreshold = 0.3
 
-confidenceThreshold = 0.0
-yolov2Subject = FakeYOLOSubject(JSON_DIR, IMG_DIR)
-deepSortNode = DeepSortNode(ENCODER_DIR, confidenceThreshold)
+#detectSubject = FakeYOLOSubject(JSON_DIR, IMG_DIR, confidenceThreshold)
+detectSubject = MaskRCNNSubject(MRCNN_ROOT, IMG_DIR)
+
+deepSortNode = DeepSortNode(ENCODER_DIR, APPLY_MASK)
 storeNode = StoreTrackObserver()
-yolov2Subject.attach(deepSortNode)
+detectSubject.attach(deepSortNode)
 deepSortNode.attach(storeNode)
-yolov2Subject.detectVideo(100)
+detectSubject.detectVideo()

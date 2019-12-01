@@ -1,0 +1,25 @@
+trackFileName = "YOLODSCam42Trakcs.json";
+videoFileName = "cam4-2.mkv";
+[tracks, trackNames] = readTracksFromJSON(trackFileName);
+
+videoReader = VideoReader(videoFileName);
+numFrames = int64(videoReader.Duration * videoReader.FrameRate);
+detectionInFrames = cell(numFrames, 1);
+
+for i = 1 : numel(tracks)
+    track = tracks{i};
+    for j = 1 : numel(track)
+        detection = {track{j}{1}, i};
+        numDetections = numel(detectionInFrames{track{j}{2}});
+        detectionInFrames{track{j}{2}}{numDetections+1} = detection;
+    end
+end
+
+for i = 1 : numFrames
+    frame = readFrame(videoReader);
+    detections = detectionInFrames{i};
+    if(numel(detections) == 0)
+    markPositions = cellfun(@(d)(d{1}), detections);
+    imshow(frame);
+    pause(0.01);
+end

@@ -13,13 +13,13 @@ IMG_DIR = "./data/imgs/cam4-2/"
 ENCODER_DIR = "./lib/deep_sort/deep_sort/resources/networks/mars-small128.ckpt-68577"
 #ENCODER_DIR = "D:\\code_collection\\RetailAnalytics\\data\\models\\Market1501\\cosine-softmax\\market1501.ckpt"
 MASK_DIR = "./data/masks/frames.h5"
-RECORD = True
+RECORD = False
 APPLY_MASK = False
 
 confidenceThreshold = 0.0
 #detectSubject = FakeYOLOSubject(JSON_DIR, IMG_DIR, confidenceThreshold)
-#detectSubject = FakeMaskRCNNSubject(MASK_DIR, IMG_DIR)
-detectSubject = MaskRCNNSubject(MRCNN_ROOT, IMG_DIR)
+detectSubject = FakeMaskRCNNSubject(MASK_DIR, IMG_DIR)
+#detectSubject = MaskRCNNSubject(MRCNN_ROOT, IMG_DIR)
 
 deepSortNode = DeepSortNode(ENCODER_DIR, APPLY_MASK)
 detectSubject.attach(deepSortNode)
@@ -27,4 +27,4 @@ detectSubject.attach(deepSortNode)
 vizNode = VisualizationObserver("Path", RECORD)
 deepSortNode.attach(vizNode)
 
-detectSubject.detectVideo()
+detectSubject.detectVideo(10)
