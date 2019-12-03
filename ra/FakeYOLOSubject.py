@@ -34,11 +34,14 @@ class FakeYOLOSubject(Subject):
     def detectVideo(self, maxNumFrame = 0):
         frameId = 0        
         for jsonFile, imgFile in zip(os.listdir(self.jsonDirectory), os.listdir(self.imgDirectory)):
+            print(frameId)
             if jsonFile.endswith(".json"):
                 self.scores = []
                 self.rois = []
                 with open(self.jsonDirectory + jsonFile, 'r') as fileHandle:
                     detection = json.loads(fileHandle.read())
+                if(isinstance(detection, dict)):
+                    detection = [detection]
                 for detectedObject in detection:
                     if(detectedObject[self.LABEL] == self.PERSON and detectedObject[self.CONFIDENCE] > self.confidenceThreshold):
                         leftTopWidthHeight = self.convertTLBRToLTWH(detectedObject)

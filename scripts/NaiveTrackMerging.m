@@ -1,5 +1,5 @@
-function mergedTracks = NaiveTrackMerging(tracks, Pthresh, sigma2)
-    mergeables = detectMergeableTracks(tracks, Pthresh, sigma2);
+function [mergedTracks, M] = NaiveTrackMerging(tracks, Pthresh, sigma2)
+    [mergeables, M] = detectMergeableTracks(tracks, Pthresh, sigma2);
     mergedTracks = mergeTracks(tracks, mergeables);
 end
 
@@ -13,7 +13,7 @@ function tracks = mergeTracks(tracks, mergeables)
     end
 end
 
-function mergeables = detectMergeableTracks(tracks, Pthresh, sigma2)
+function [mergeables, M] = detectMergeableTracks(tracks, Pthresh, sigma2)
     trackModels = convertTrackModel(tracks);
     P = zeros(numel(trackModels));
     for i = 1 : numel(trackModels)

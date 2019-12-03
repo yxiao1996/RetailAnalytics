@@ -13,3 +13,4 @@ ra/__pycache__/*cpython*
 *.png
 data/models/*
 *.mat
+*.asv

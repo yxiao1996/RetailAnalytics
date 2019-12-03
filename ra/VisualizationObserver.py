@@ -40,7 +40,7 @@ class VisualizationObserver(Observer):
 
         # display
         cv2.imshow(self.vizType, image)
-        cv2.waitKey(0)
+        cv2.waitKey(10)
         
         if self.SaveVideo:
             self.videoWriter.write(image)
