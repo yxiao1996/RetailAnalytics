@@ -1,7 +1,17 @@
 WRITE = false;
+EASY = false;
 trackFileName = "YOLO2DSSqrNMSTracks.json";
 maskFileName = "counter_mask_large.mat";
 imageFolder = "D:\\code_collection\\RetailAnalytics\\data\\imgs\\cam2-2_square\\";
+
+if(EASY)
+    startFrame = 900;
+    endFrame = 1099;
+else
+    startFrame = 200;
+    endFrame = 399;
+end
+
 [tracks, trackNames] = readTracksFromJSON(trackFileName);
 
 maskFile = load(maskFileName);
@@ -9,14 +19,6 @@ counterMask = maskFile.mask_2;
 jpgFiles = dir(strcat(imageFolder, '*.jpg'));
 numFrames = numel(jpgFiles);
 detectionInFrames = cell(numFrames, 1);
-
-figure(1);
-findTrackLength = @(track)(numel(track));
-trackLengths = cellfun(findTrackLength, tracks);
-subplot(1, 2, 1); histogram(trackLengths);
-%tracks = NaiveTrackMerging(tracks, 0.0005, 1);
-trackLengths = cellfun(findTrackLength, tracks);
-subplot(1, 2, 2); histogram(trackLengths);
 
 for i = 1 : numel(tracks)
     track = tracks{i};
@@ -28,13 +30,14 @@ for i = 1 : numel(tracks)
 end
 
 if(WRITE)
-    videoWriter = VideoWriter('tracks');
+    videoWriter = VideoWriter('counterTracks');
+    videoWriter.FrameRate = 20;
     open(videoWriter);
 else
     figure(2);
 end
 
-for i = 1 : numFrames
+for i = startFrame : endFrame
     frame = imread(strcat(imageFolder, jpgFiles(i).name));
     detections = detectionInFrames{i};
     if(numel(detections) > 0)        
@@ -43,12 +46,16 @@ for i = 1 : numFrames
         frame = insertMarker(frame, markPositions', 'Size', 6);
         frame = insertText(frame, markPositions', detectNames);
     end  
+    
+    h = imshow(frame);
+    alphamask(counterMask, [0 1 0], 0.8);
+    
     if(WRITE)
-        writeVideo(videoWriter, frame);  
+        outputFrame = getframe(gcf);
+        writeVideo(videoWriter, outputFrame); 
     else
-        h = imshow(frame);
-        alphamask(counterMask, [0 0 1], 0.3);
         pause(0.01);
+        input();
     end
     if(mod(i, 200) == 0)
         fprintf("#%d frame\n", i);
